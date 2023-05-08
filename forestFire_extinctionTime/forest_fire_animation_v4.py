@@ -60,7 +60,7 @@ while fireCount > 0:
         currentConfig = updatedConfig
 
 # numpyのバージョンアップにより、""ndarray from ragged nested sequences"の制限が厳しくなり、
-# animatplotの途中でエラーが出るようになった。そのための修正が以下の２行
+# animatplotの途中でエラーが出るようになった。そのための修正が以下の６行
 x_black = np.asanyarray(x_black, dtype=object)
 y_black = np.asanyarray(y_black, dtype=object)
 x_green = np.asanyarray(x_green, dtype=object)
