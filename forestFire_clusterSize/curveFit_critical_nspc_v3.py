@@ -113,7 +113,7 @@ if __name__ == '__main__':
 
     with np.errstate(divide='ignore'):
         logHist_x = [ np.log10(x) for x in hist_x ]
-        logHist_y = [ np.log10(x) for x in hist_ave ]
+        logHist_y = [ np.log10(y) for y in hist_ave ]
 
     dataLogHist_orig = [logHist_x, logHist_y] 
     dataLogHist = remove_inf(dataLogHist_orig)
