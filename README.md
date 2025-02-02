@@ -16,3 +16,6 @@ Sの計算だからということでp=0.5-0.6の範囲で行うとcurvefitが�
 
 curveFit_critical_P_v4.pyについて
 こちらも同様。p=0.6-0.7はNG、p=0.58-0.7はOK。
+
+forestFire_clusterStructureについて
+これも上記と同様にcurveFit_critical_xi_v4.pyは0.6を絡めるとNG。さらにそもそも的にforestFire_clusterSizeで修正を施した「S(w_ave)がpercolation clusterを含んだ計算になっていた」という部分を修正していない。これの修正も今後必要。

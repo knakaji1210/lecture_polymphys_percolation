@@ -77,10 +77,10 @@ for p in p_list:
 
 h_list.append(elapsed_time)
 
-print(cluster_size_mean_list)
-print(cluster_size_std_list)
-print(corr_len_mean_list)
-print(corr_len_std_list)
+# print(cluster_size_mean_list)
+# print(cluster_size_std_list)
+# print(corr_len_mean_list)
+# print(corr_len_std_list)
 
 fig = plt.figure(figsize=(12, 5))
 
