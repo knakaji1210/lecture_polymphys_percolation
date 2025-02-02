@@ -1,5 +1,7 @@
 # curve fitting for cluster size (p < pc)
 
+# 描画範囲をp<p_cに固定
+
 import sys
 import numpy as np
 from scipy.optimize import curve_fit
