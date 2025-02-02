@@ -1,9 +1,15 @@
 # Calculation of forest fire statistics (cluster size)
 
+# バージョンを変えないまま修正した
+# pを変えてSとPの計算をしていくのだが、これは同時に行った方が良いので、中身は変更せず
+# フィッティング範囲、描画範囲だけ変えれば良い。
+# ただし、clusterStat_v2を使っているのでSの方の振る舞いは以前から変化している
+# （Pクラスターを除外した結果、p > p_cでSが減少していく）
+
 import numpy as np
 from math import *
 import clusterFuncResult_rg as cfr
-import clusterStat as cs
+import clusterStat_v2 as cs            # 修正したのはここだけ
 import matplotlib.pyplot as plt
 import time
 
