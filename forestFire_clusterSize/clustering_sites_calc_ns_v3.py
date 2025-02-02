@@ -8,7 +8,7 @@
 import numpy as np
 from math import *
 import clusterFuncResult_rg as cfr
-import clusterStat as cs
+import clusterStat_v2 as cs
 import clusterHist_v2 as ch
 # 要チェック
 import matplotlib.pyplot as plt
