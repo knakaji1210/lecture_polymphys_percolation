@@ -1,3 +1,7 @@
+# 250323コメント
+# clustering_sites_regular_v7.py
+# で必要としているので、これはlegacyにはもっていかない。
+
 import numpy as np
 
 def clusterHist(clusters_list, choice, maxSize):
