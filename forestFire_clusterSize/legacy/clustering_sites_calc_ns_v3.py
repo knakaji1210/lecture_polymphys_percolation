@@ -5,6 +5,9 @@
 # nspcの計算だけでなくnsの計算ができるのだから名前もclustering_sites_calc_ns_v3.pyと変更
 # それに伴う修正を加えた
 
+# 250323コメント
+# v4が完成したのでlegacyに移動
+
 import numpy as np
 from math import *
 import clusterFuncResult_rg as cfr
