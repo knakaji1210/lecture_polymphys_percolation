@@ -15,6 +15,9 @@
 # clustering_sites_calc_ns_v4.py、clusterHist_v3.pyと連動
 # curve_fitのsigmaを使って重み付きフィッティングもできるようにした
 
+# 250323コメント
+# プログラム名をcurveFit_ns_fisher_v5.pyに変更
+
 import sys
 import math
 import numpy as np
