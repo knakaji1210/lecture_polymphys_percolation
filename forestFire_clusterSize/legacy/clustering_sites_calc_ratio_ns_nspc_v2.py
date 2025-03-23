@@ -1,3 +1,7 @@
+# 250323コメント
+# このバージョンには致命的なミスがある（v3のコメント参照）。
+# そういうわけでこれはlegacyに移動。
+
 import math
 import numpy as np
 from scipy.optimize import curve_fit
