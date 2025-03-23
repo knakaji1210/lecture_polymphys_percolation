@@ -2,6 +2,9 @@
 # sやnsをlogで処理する形に変更
 # clustering_sites_calc_ns_v4.pyと連動
 
+# 250322コメント
+# log_histには-infが含まれることがあり、それらをnanに変換（18行目）
+
 import numpy as np
 
 def clusterHist(clusters_list, maxSize):
@@ -12,6 +15,7 @@ def clusterHist(clusters_list, maxSize):
 
     with np.errstate(divide='ignore'):
         log_hist = [ np.log10(h) for h in hist ]
+        log_hist = [ np.nan if x == -np.inf else x for x in log_hist ]
 
     hist_x = []
     bar_width = []

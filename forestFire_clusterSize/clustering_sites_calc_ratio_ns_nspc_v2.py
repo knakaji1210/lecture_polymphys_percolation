@@ -147,4 +147,7 @@ if __name__ == '__main__':
     fig.text(0.6, 0.8, result_text1)
     fig.text(0.6, 0.75, result_text2)
 
+    savefile = "./png/clusterSize_ratio_ns_nspc_{0}x{1}_p{2}.png".format(lattice_x,lattice_y, p)
+    fig.savefig(savefile, dpi=300)
+
     plt.show()

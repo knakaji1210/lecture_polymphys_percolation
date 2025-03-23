@@ -16,6 +16,7 @@
 # curve_fitのsigmaを使って重み付きフィッティングもできるようにした
 
 import sys
+import math
 import numpy as np
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
@@ -23,11 +24,11 @@ import matplotlib.pyplot as plt
 '''
 How to use
 % python3 curveFit_critical_ns_v3.py args[1] args[2] args[3] args[4]  args[5]
-args[1] ./data/h_list_100x100_p0.6.txt
-args[2] ./data/x_list_100x100_p0.6.txt
-args[3] ./data/y_mean_list_100x100_p0.6.txt
-args[4] ./data/y_std_list_100x100_p0.6.txt 
-args[5] ./data/bw_list_100x100_p0.6.txt 
+args[1] ./data/h_list(log)_100x100_p0.6.txt
+args[2] ./data/x_list(log)_100x100_p0.6.txt
+args[3] ./data/y_mean_list(log)_100x100_p0.6.txt
+args[4] ./data/y_std_list(log)_100x100_p0.6.txt 
+args[5] ./data/bw_list(log)_100x100_p0.6.txt 
 '''
     
 def head_read():
@@ -75,9 +76,10 @@ def file_read():
     return dataset
 
 '''
+250323コメント・・・以下は過去のコメント
 要素として0を含むリストをlog10すると
 RuntimeWarning: divide by zero
-が出て、値が-infになる。それを除去するための関数
+が出て、値が-infになる。それを除去するための関数がremove_inf
 250314コメントとの連動で、読み込まれる
 x_list、y_mean_list
 が既にlogされており、
@@ -87,9 +89,13 @@ y_std_list
 にはnanが含まれている。
 しかし、y_mean_listで-infになっているところがnanになっているので
 同じインデックスの要素をぬけば良いという発想で抜いている
+250323コメント・・・ここから新しいコメント
+計算順序変更のため、y_mean_listやy_std_listにはもはや-infは含まれていない
+一方、nanは含まれており、それを除去するための関数がremove_nan
+同様にcurve_fitのsigmaに0が含まれているとエラーになるのでremove_zerosも追加
 '''
 
-def remove_inf(dataset):
+def remove_infs(dataset):
     f_inf_minus = -float('inf')
 
     x_list = []
@@ -98,6 +104,48 @@ def remove_inf(dataset):
 
     for i in range(len(dataset[1])):
         if dataset[1][i] == f_inf_minus:
+            pass
+        else:
+            x_list.append(dataset[0][i])
+            y_list.append(dataset[1][i])
+            yerr_list.append(dataset[2][i])
+
+    x_array = np.array(x_list)
+    y_array = np.array(y_list)
+    yerr_array = np.array(yerr_list)
+    new_dataset = [x_array, y_array, yerr_array]
+
+    return new_dataset
+
+def remove_nans(dataset):
+
+    x_list = []
+    y_list = []
+    yerr_list = []
+
+    for i in range(len(dataset[1])):
+        if  math.isnan(dataset[1][i]) == True:
+            pass
+        else:
+            x_list.append(dataset[0][i])
+            y_list.append(dataset[1][i])
+            yerr_list.append(dataset[2][i])
+
+    x_array = np.array(x_list)
+    y_array = np.array(y_list)
+    yerr_array = np.array(yerr_list)
+    new_dataset = [x_array, y_array, yerr_array]
+
+    return new_dataset
+
+def remove_zeros(dataset):
+
+    x_list = []
+    y_list = []
+    yerr_list = []
+
+    for i in range(len(dataset[2])):
+        if  dataset[2][i] == 0:
             pass
         else:
             x_list.append(dataset[0][i])
@@ -137,11 +185,13 @@ if __name__ == '__main__':
     logHist_y_std = dataset[2]
     bar_width = dataset[3]
 
-    dataLogHist_orig = [logHist_x, logHist_y, logHist_y_std] 
-    dataLogHist = remove_inf(dataLogHist_orig)
+    dataLogHist = [logHist_x, logHist_y, logHist_y_std] 
+#    dataLogHist = remove_infs(dataLogHist)
+    dataLogHist = remove_nans(dataLogHist)
+    dataLogHist = remove_zeros(dataLogHist)
 
 #    param, cov = curve_fit(linearFit, dataLogHist[0], dataLogHist[1])
-    param, cov = curve_fit(linearFit, dataLogHist[0], dataLogHist[1], sigma=dataLogHist[2])
+    param, cov = curve_fit(linearFit, dataLogHist[0], dataLogHist[1], sigma=dataLogHist[2]) # 重み付きフィッティング
     paramErr = np.sqrt(cov[0][0])
 
     print('fitting parameter: {}'.format(param))

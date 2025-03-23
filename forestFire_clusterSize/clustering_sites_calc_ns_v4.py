@@ -4,6 +4,12 @@
 # sやnsをlogで処理する形に変更
 # clusterHist_v3.pyと連動
 
+# 250322コメント
+# clusterHist_v3.pyでlog_histに含まれてしまう-infをnanに変換済み
+# hist_ave = np.mean(hist_rep, axis=0)
+# ではnanが含まれているとnp.meanがnanになってしまう。そこでnp.nanmeanを使う。
+# hist_ave = np.nanmean(hist_rep, axis=0)
+
 import numpy as np
 from math import *
 import clusterFuncResult_rg as cfr
@@ -29,14 +35,18 @@ except ValueError:
     p = 0.6
 
 try:
-    num_repeat = int(input('Number of Repetition (default=10): '))
+    num_repeat = int(input('Number of Repetition (default=100): '))
 except ValueError:
-    num_repeat = 10
+    num_repeat = 100
 
-try:
-    choice = input('with/without percolation cluster? (w or wo): ')
-except:
-    choice = "wo"
+pc = 0.6
+choice = "wo"
+
+if p >= pc:
+    try:
+        choice = input('with/without percolation cluster? (w or wo): ')
+    except:
+        choice = "wo"
 
 h_list = [lattice_x, lattice_y, p, num_repeat]
 
@@ -67,8 +77,8 @@ for clusters_list in clusters_list_rep:
     hist_rep.append(dataHist[1])
 
 hist_x = dataHist[0]
-hist_ave = np.mean(hist_rep, axis=0)
-hist_std = np.std(hist_rep, axis=0)
+hist_ave = np.nanmean(hist_rep, axis=0)
+hist_std = np.nanstd(hist_rep, axis=0)
 bar_width = dataHist[2]
 max_range = dataHist[3]
 
@@ -98,11 +108,25 @@ fig.text(0.65, 0.75, result_text2)
 fig.text(0.65, 0.70, result_text3)
 fig.text(0.65, 0.65, result_text4)
 
-savefile1 = "./data/h_list_{0}x{1}_p{2}.txt".format(lattice_x,lattice_y, p)
-savefile2 = "./data/x_list_{0}x{1}_p{2}.txt".format(lattice_x,lattice_y, p)
-savefile3 = "./data/y_mean_list_{0}x{1}_p{2}.txt".format(lattice_x,lattice_y, p)
-savefile4 = "./data/y_std_list_{0}x{1}_p{2}.txt".format(lattice_x,lattice_y, p)
-savefile5 = "./data/bw_list_{0}x{1}_p{2}.txt".format(lattice_x,lattice_y, p)
+if p >= pc:
+    if choice == "w":
+        savefile1 = "./data/h_list(log)_{0}x{1}_p{2}_w.txt".format(lattice_x,lattice_y, p)
+        savefile2 = "./data/x_list(log)_{0}x{1}_p{2}_w.txt".format(lattice_x,lattice_y, p)
+        savefile3 = "./data/y_mean_list(log)_{0}x{1}_p{2}_w.txt".format(lattice_x,lattice_y, p)
+        savefile4 = "./data/y_std_list(log)_{0}x{1}_p{2}_w.txt".format(lattice_x,lattice_y, p)
+        savefile5 = "./data/bw_list(log)_{0}x{1}_p{2}_w.txt".format(lattice_x,lattice_y, p)
+    elif choice == "wo":
+        savefile1 = "./data/h_list(log)_{0}x{1}_p{2}_wo.txt".format(lattice_x,lattice_y, p)
+        savefile2 = "./data/x_list(log)_{0}x{1}_p{2}_wo.txt".format(lattice_x,lattice_y, p)
+        savefile3 = "./data/y_mean_list(log)_{0}x{1}_p{2}_wo.txt".format(lattice_x,lattice_y, p)
+        savefile4 = "./data/y_std_list(log)_{0}x{1}_p{2}_wo.txt".format(lattice_x,lattice_y, p)
+        savefile5 = "./data/bw_list(log)_{0}x{1}_p{2}_wo.txt".format(lattice_x,lattice_y, p)
+else:
+    savefile1 = "./data/h_list(log)_{0}x{1}_p{2}.txt".format(lattice_x,lattice_y, p)
+    savefile2 = "./data/x_list(log)_{0}x{1}_p{2}.txt".format(lattice_x,lattice_y, p)
+    savefile3 = "./data/y_mean_list(log)_{0}x{1}_p{2}.txt".format(lattice_x,lattice_y, p)
+    savefile4 = "./data/y_std_list(log)_{0}x{1}_p{2}.txt".format(lattice_x,lattice_y, p)
+    savefile5 = "./data/bw_list(log)_{0}x{1}_p{2}.txt".format(lattice_x,lattice_y, p)
 
 np.savetxt(savefile1, h_list)
 np.savetxt(savefile2, hist_x)
@@ -110,7 +134,14 @@ np.savetxt(savefile3, hist_ave)
 np.savetxt(savefile4, hist_std)
 np.savetxt(savefile5, bar_width)
 
-savefile = "./png/clusterSize_critical_{0}x{1}_p{2}.png".format(lattice_x,lattice_y, p)
+if p >= pc:
+    if choice == "w":
+        savefile = "./png/clusterSize_critical_{0}x{1}_p{2}_w.png".format(lattice_x,lattice_y, p)
+    elif choice == "wo":
+        savefile = "./png/clusterSize_critical_{0}x{1}_p{2}_wo.png".format(lattice_x,lattice_y, p)
+else:
+    savefile = "./png/clusterSize_critical_{0}x{1}_p{2}.png".format(lattice_x,lattice_y, p)
+
 fig.savefig(savefile, dpi=300)
 
 plt.show()
