@@ -51,12 +51,11 @@ def expFit(x, a, b, c):
 def polyFit(x, a, b):
     return  x**(1/a) + b
 
-def expFitArray(x_array, param):
-    fitted_array = np.array([ expFit(x, param[0], param[1], param[2]) for x in x_array ])
-    return fitted_array
-
-def polyFitArray(x_array, param):
-    fitted_array = np.array([ polyFit(x, param[0], param[1]) for x in x_array ])
+def fittedArray(x_array, param, func):
+    if func == "exp":
+        fitted_array = np.array([ expFit(x, param[0], param[1], param[2]) for x in x_array ])
+    elif func == "poly":
+        fitted_array = np.array([ polyFit(x, param[0], param[1]) for x in x_array ])
     return fitted_array
 
 if __name__ == '__main__':
@@ -139,7 +138,7 @@ if __name__ == '__main__':
         param, cov = curve_fit(expFit, s_array[argm:], ratio_array[argm:], p0=[1,0,0.001], maxfev=8000)
         paramErr = np.sqrt(cov[2][2])
         fit_s_array = np.linspace(s_array[0], s_array[-1], 100)
-        fit_func_ns = expFitArray(fit_s_array, param)
+        fit_func_ns = fittedArray(fit_s_array, param, "exp")
         ax1.scatter(s_array, ratio_array, label="p = {0}".format(p))
         ax1.plot(fit_s_array, fit_func_ns)
         c_array = np.append(c_array, param[2])
@@ -153,7 +152,7 @@ if __name__ == '__main__':
     param, cov = curve_fit(polyFit, del_p_array, c_array, sigma=cerr_array)
     paramErr = np.sqrt(cov[0][0])
     del_p = np.linspace(del_p_array[0], del_p_array[-1], 100)
-    fit_func_c = polyFitArray(del_p, param)
+    fit_func_c = fittedArray(del_p, param, "poly")
     ax2.scatter(del_p_array, c_array)
     ax2.errorbar(del_p_array, c_array, yerr = cerr_array, capsize=2, fmt='none')
     ax2.plot(del_p, fit_func_c)
