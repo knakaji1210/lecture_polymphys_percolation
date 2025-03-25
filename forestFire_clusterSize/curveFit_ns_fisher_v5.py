@@ -206,17 +206,21 @@ if __name__ == '__main__':
     except ValueError:
         p = 0.6
 
-    lx = str(lattice_x)
-    ly = str(lattice_y)
-
-    pc = 0.6
-    choice = "wo"
+    try:
+        pc = float(input('Percolation threshold (default=0.6): '))
+    except ValueError:
+        pc = 0.6
 
     if p >= pc:
         try:
             choice = input('with/without percolation cluster? (w or wo): ')
         except:
             choice = "wo"
+    else:
+        choice = "wo"
+
+    lx = str(lattice_x)
+    ly = str(lattice_y)
 
     h_array = head_read(lx,ly,p,choice)
     num_repeat = int(h_array[3])
