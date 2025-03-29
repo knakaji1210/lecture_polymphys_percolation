@@ -9,7 +9,7 @@ import clusterFunc_rg as crg
 
 '''
 calcClusterAttributeについて
-引数はcluster_coordinatesであり、これはある１つのクラスターに属すsitesの座標のリストで
+引数はcluster_coordinatesであり、これはある1つのクラスターに属すsitesの座標のリストで
 [[-4.5, -0.5], [-4.5, 0.5], [-3.5, -0.5], [-4.5, 1.5], [-4.5, 2.5], [-4.5, 3.5], [-4.5, 4.5], [-3.5, 3.5], [-3.5, 4.5]]
 のようなもの。ここからsとradius_gyrationを計算して、それを返り値として渡す関数
 '''
