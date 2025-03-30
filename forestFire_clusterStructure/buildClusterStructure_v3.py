@@ -71,7 +71,7 @@ def buildClusterStructure(lattice_x, lattice_y, p):
                         updatedConfig, cluster_coordinates_diff = crg.fireSpread(lattice_x, lattice_y, end_point_id, currentConfig) #cluster structureのために変更
                         cluster_coordinates += cluster_coordinates_diff #cluster structureのために追加
                         currentConfig = updatedConfig
-                cluster_coordinates.insert(0, int_fired_point_coordinate) #cluster structureのために追加
+                cluster_coordinates.insert(0, int_fired_point_coordinate) #cluster structureのために追加、着火点もリストに追加する
                 cluster_attribute = calcClusterAttribute(cluster_coordinates)
                 cluster_attribute_list.append(cluster_attribute) #cluster structureのために追加
                 cluster_attribute_list.sort()
