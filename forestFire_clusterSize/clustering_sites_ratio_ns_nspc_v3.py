@@ -60,14 +60,14 @@ def fittedArray(x_array, param, func):
 
 if __name__ == '__main__':
     try:
-        lattice_x = int(input('X-Lattice Size (default=200): '))
+        lattice_x = int(input('X-Lattice Size (default=300): '))
     except ValueError:
-        lattice_x = 200
+        lattice_x = 300
 
     try:
-        lattice_y = int(input('Y-Lattice y Size (default=100): '))
+        lattice_y = int(input('Y-Lattice y Size (default=300): '))
     except ValueError:
-        lattice_y = 100
+        lattice_y = 300
 
     '''
     Max probを0.6で行うと結果が思う形にならない。そこで0.59をベースにした。
@@ -88,8 +88,8 @@ if __name__ == '__main__':
     log_s_pb = np.loadtxt(log_s_file_pb, dtype=float)       # x軸のp=pbのlos(s)、他のpでも全て同じ
     log_ns_pb = np.loadtxt(log_ns_file_pb, dtype=float)
 
-    s_array = np.array([ int(10**log_s) for log_s in log_s_pb])
-    len_s = s_array.size
+    orig_s_array = np.array([ int(10**log_s) for log_s in log_s_pb])
+    len_s = orig_s_array.size
 
     try:
         max_prob = float(input('Max probability (default=0.58): '))
@@ -126,6 +126,7 @@ if __name__ == '__main__':
 
     fig = plt.figure(figsize=(16.0, 8.0))
     ax1 = fig.add_subplot(121, title=fig_title1, xlabel=title1_x, ylabel=title1_y)
+    ax1.set_xscale('log')
     ax2 = fig.add_subplot(122, title=fig_title2, xlabel=title2_x, ylabel=title2_y)
 
     n = 0
@@ -133,14 +134,18 @@ if __name__ == '__main__':
     for prob in prob_array:
         p = "{:.2f}".format(prob)
         ratio_array = log_ns_array[n] - log_ns_pb     # ns_arrayは既にlogになっているので比は引き算
+        s_array = orig_s_array                        # 常にorig_s_arrayを参照する
         s_array, ratio_array = remove_nan(s_array, ratio_array)
         argm = np.argmax(ratio_array)
         param, cov = curve_fit(expFit, s_array[argm:], ratio_array[argm:], p0=[1,0,0.001], maxfev=8000)
         paramErr = np.sqrt(cov[2][2])
-        fit_s_array = np.linspace(s_array[0], s_array[-1], 100)
-        fit_func_ns = fittedArray(fit_s_array, param, "exp")
+#        fit_s_array = np.linspace(s_array[0], s_array[-1], 100)    # 線形軸用
+#        fit_func_ns = fittedArray(fit_s_array, param, "exp")       # 線形軸用
+        fit_log_s_array = np.logspace(np.log10(s_array[0]), np.log10(s_array[-1]), 100)
+        fit_func_ns = fittedArray(fit_log_s_array, param, "exp")
         ax1.scatter(s_array, ratio_array, label="p = {0}".format(p))
-        ax1.plot(fit_s_array, fit_func_ns)
+#        ax1.plot(fit_s_array, fit_func_ns)                         # 線形軸用
+        ax1.plot(fit_log_s_array, fit_func_ns)
         c_array = np.append(c_array, param[2])
         cerr_array = np.append(cerr_array, paramErr)
         n += 1
